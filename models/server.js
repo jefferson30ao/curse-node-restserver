@@ -21,10 +21,24 @@ class Server {
     }
 
     middlewares(){
+        // Middleware para configurar los encabezados de seguridad primero
+        this.app.use((req, res, next) => {
+            res.append("Cross-Origin-Opener-Policy", "same-origin-allow-popups");
+            res.append("Cross-Origin-Embedder-Policy", "unsafe-none");
+            next();
+        });
+    
+        // Habilitar CORS después
         this.app.use(cors());
+    
+        // Parseo y lectura del body
         this.app.use(express.json());
+    
+        // Directorio público
         this.app.use(express.static('public'));
     }
+    
+    
 
     routes() {
         this.app.use(this.authPath, require('../routes/auth'));
